@@ -1,0 +1,23 @@
+deepspeed --include localhost:2 --master_port 60000 --module vdocrag.vdocretriever.driver.train \
+  --deepspeed deepspeed/ds_zero3_config.json \
+  --output_dir outputs/vdocretriever-phi3-vision_finetune \
+  --model_name_or_path /home/zhuyinglian/fdu02_dir/zyl/downloads/Phi-3-vision-128k-instruct \
+  --lora \
+  --lora_target_modules q_proj,k_proj,v_proj,o_proj,down_proj,up_proj,gate_proj \
+  --save_steps 2000 \
+  --bf16 \
+  --pooling eos \
+  --append_eos_token \
+  --normalize \
+  --temperature 0.01 \
+  --per_device_train_batch_size 4 \
+  --gradient_checkpointing \
+  --train_group_size 1 \
+  --learning_rate 1e-4 \
+  --query_max_len 256 \
+  --answer_max_len 256 \
+  --num_train_epochs 1 \
+  --logging_steps 10 \
+  --overwrite_output_dir \
+  --gradient_accumulation_steps 4 \
+  --report_to wandb \

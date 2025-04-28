@@ -1,0 +1,11 @@
+CUDA_VISIBLE_DEVICES=0 python -m vdocrag.vdocretriever.driver.encode \
+  --output_dir=temp \
+  --model_name_or_path /home/zhuyinglian/fdu02_dir/zyl/downloads/Phi-3-vision-128k-instruct \
+  --lora_name_or_path outputs/vdocretriever-phi3-vision_finetune \
+  --lora \
+  --bf16 \
+  --pooling eos \
+  --append_eos_token \
+  --normalize \
+  --per_device_eval_batch_size 12 \
+  --encode_output_path EMBEDDING_OUTPUT_DIR/corpus_sub5000.pkl 
