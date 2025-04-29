@@ -15,7 +15,7 @@ class TrainDataset(Dataset):
     def __init__(self, data_args: DataArguments, trainer = None):
         self.data_args = data_args
         self.doc_id2summary={}
-        with open('~/fdu02_dir/zyl/downloads/OpenDocVQA-Corpus_5000/summary.jsonl',encoding='utf-8') as f:
+        with open('/home/zhuyinglian/fdu02_dir/zyl/downloads/OpenDocVQA-Corpus_5000/summary.jsonl',encoding='utf-8') as f:
             for line in f:
                 self.doc_id2summary[line.keys()[0]]=line.values()[0]
         self.train_data = load_dataset(
