@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 class TrainDataset(Dataset):
     def __init__(self, data_args: DataArguments, trainer = None):
         self.data_args = data_args
+        self.doc_id2summary={}
+        with open('~/fdu02_dir/zyl/downloads/OpenDocVQA-Corpus_5000/summary.jsonl',encoding='utf-8') as f:
+            for line in f:
+                self.doc_id2summary[line.keys()[0]]=line.values()[0]
         self.train_data = load_dataset(
             self.data_args.dataset_name,
             self.data_args.dataset_config,
@@ -69,16 +73,16 @@ class TrainDataset(Dataset):
             image = group['image']
         else:
             relevant_docids = group['relevant_doc_ids']
-
+            
             if self.data_args.positive_document_no_shuffle:
                 docid = relevant_docids[0]
             else:
                 docid = relevant_docids[0]
                 # docid = relevant_docids[(_hashed_seed + epoch) % len(relevant_docids)]
-
+            summary=self.doc_id2summary[docid]
             image = image = self.corpus[self.docid2idx[docid]]['image']
 
-        return query, image
+        return query, image,summary
 
 
 class EncodeDataset(Dataset):

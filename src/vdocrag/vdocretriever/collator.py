@@ -26,8 +26,8 @@ class TrainCollator:
 
     def __call__(self, features: List[Tuple[str, List[str]]]):
         all_queries = [f[0] for f in features]
-        all_images = [f[-1] for f in features]
-
+        all_images = [f[1] for f in features]
+        all_summaries=[f[-1] for f in features]
         q_collated = self.tokenizer(
             all_queries,
             padding=False, 
@@ -39,7 +39,11 @@ class TrainCollator:
         )
 
         d_collated = {}
-        collated_list = [self.processor("<|image_1|>\nWhat is shown in this image?", image, return_tensors="pt") for image in all_images]        
+        input_prompt="You are conducting a multimodal document relevance assessment overview. Your core objective is to generate a structured and concise summary of the document to help determine whether the page may contain information relevant to unknown potential issues. Only verifiable conclusions should be provided—avoid excessive speculation.\n\
+    Focus areas include:\n\
+    Textual information: The main topics of [titles/paragraphs/table text]\n\
+    Visual elements: [charts/images]\nPlease respond with two concise paragraphs." 
+        collated_list = [self.processor("<|image_1|>\n"+input_prompt+all_summaries[i], image, return_tensors="pt") for i,image in enumerate(all_images)]        
         d_collated['input_ids'] = [d['input_ids'][0].tolist() for d in collated_list]
 
         if self.data_args.append_eos_token:
